@@ -1,6 +1,6 @@
 exports.mostrarTrabajos = (req, res) => {
     res.render('home', {
-        nombrePagina: 'devJobs',
+        nombrePagina: 'devjobs',
         tagline: 'Encuentra y publica trabajos para Desarrolldores Web',
         barra: true,
         boton: true
