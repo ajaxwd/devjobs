@@ -14,6 +14,10 @@ require('dotenv').config({path : 'variables.env'});
 
 const app = express();
 
+//habilitar body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 //habilitar handlerbars
 app.engine('handlebars', 
     exphbs({
