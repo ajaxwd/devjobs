@@ -17,7 +17,8 @@ const app = express();
 //habilitar handlerbars
 app.engine('handlebars', 
     exphbs({
-        defaultLayout: 'layout'
+        defaultLayout: 'layout',
+        helpers: require('./helpers/handlebars')
     })
 );
 
