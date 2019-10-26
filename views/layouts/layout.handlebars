@@ -33,6 +33,12 @@
         {{/if}}
     </header>
     <div class="contenedor-principal contenedor">
+        {{#if mensajes}}
+            <div class="alertas">
+                {{#mostrarAlertas mensajes}}
+                {{/mostarAlertas}}
+            </div>
+        {{/if}}
         {{{body}}}
     </div>
 
