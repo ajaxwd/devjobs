@@ -62,7 +62,8 @@ module.exports = () => {
     );
     router.post('/editar-perfil',
         authControllers.autenticarUsuario,
-        usuariosControllers.validarPerfil,
+        //usuariosControllers.validarPerfil,
+        usuariosControllers.subirImagen,
         usuariosControllers.editarPerfil
     );
 
