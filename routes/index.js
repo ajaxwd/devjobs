@@ -1,83 +1,103 @@
 const express = require('express');
 const router = express.Router();
-const homeControllers = require('../controllers/homeControllers');
-const vacantesControllers = require('../controllers/vacantesControllers');
-const usuariosControllers = require('../controllers/usuariosControllers');
-const authControllers = require('../controllers/authControllers');
+const homeController = require('../controllers/homeController');
+const vacantesController = require('../controllers/vacantesController');
+const usuariosController = require('../controllers/usuariosController');
+const authController = require('../controllers/authController');
+
+
 
 module.exports = () => {
-    router.get('/', homeControllers.mostrarTrabajos);
+    router.get('/', homeController.mostrarTrabajos);
 
-    //Crear vacantes
-    router.get('/vacantes/nueva', 
-        authControllers.autenticarUsuario,
-        vacantesControllers.formularioNuevaVacante);
+    // Crear Vacantes
+    router.get('/vacantes/nueva',  
+        authController.verificarUsuario,
+        vacantesController.formularioNuevaVacante
+    );
     router.post('/vacantes/nueva', 
-        authControllers.autenticarUsuario,
-        vacantesControllers.validarVacante,
-        vacantesControllers.agregarVacante);
-
-    //mostrar vacante
-    router.get('/vacante/:url', vacantesControllers.mostrarVacante);
-
-    //editar vacantes
-    router.get('/vacante/editar/:url', 
-        authControllers.autenticarUsuario,
-        vacantesControllers.formEditarVacante);
-    router.post('/vacante/editar/:url', 
-        authControllers.autenticarUsuario,
-        vacantesControllers.validarVacante,
-        vacantesControllers.editarVacante);
-
-    //Eliminar vacantes
-    router.delete('/vacantes/eliminar/:id',
-        vacantesControllers.eliminarVacante
+        authController.verificarUsuario,
+        vacantesController.validarVacante,
+        vacantesController.agregarVacante
     );
 
-    //Crear cuentas
-    router.get('crear-cuenta', usuariosControllers.formCrearCuenta);
-    router.post('crear-cuenta', 
-        usuariosControllers.validarRegistro,
-        usuariosControllers.crearUsuario);
+    // Mostrar Vacante (singular)
+    router.get('/vacantes/:url',vacantesController.mostrarVacante );
 
-    //autentificar usuarios
-    router.get('/iniciar-sesion', usuariosControllers.formIniciarSesion);
-    router.post('/iniciar-sesion', authControllers.autenticarUsuario);
+    // Editar Vacante
+    router.get('/vacantes/editar/:url', 
+        authController.verificarUsuario,
+        vacantesController.formEditarVacante
+    );
+    router.post('/vacantes/editar/:url', 
+        authController.verificarUsuario,
+        vacantesController.validarVacante,
+        vacantesController.editarVacante
+    );
 
-    //cerrar sesion
-    router.get('/cerrar-sesion', 
-        authControllers.autenticarUsuario,
-        authControllers.cerrarSesion
+    // Eliminar Vacantes
+    router.delete('/vacantes/eliminar/:id', 
+        vacantesController.eliminarVacante
+    );
+
+    // Crear Cuentas
+    router.get('/crear-cuenta', usuariosController.formCrearCuenta);
+    router.post('/crear-cuenta', 
+        usuariosController.validarRegistro,
+        usuariosController.crearUsuario
+    );
+
+    // Autenticar Usuarios
+    router.get('/iniciar-sesion', usuariosController.formIniciarSesion);
+    router.post('/iniciar-sesion',authController.autenticarUsuario);
+    // cerrar sesion
+    router.get('/cerrar-sesion',
+        authController.verificarUsuario,
+        authController.cerrarSesion
+    );
+
+    // Resetear password (emails)
+    router.get('/reestablecer-password', authController.formReestablecerPassword);
+    router.post('/reestablecer-password', authController.enviarToken);
+
+    // Resetear Password ( Almacenar en la BD )
+    router.get('/reestablecer-password/:token', authController.reestablecerPassword);
+    router.post('/reestablecer-password/:token', authController.guardarPassword);
+
+
+    // Panel de administración
+    router.get('/administracion',
+        authController.verificarUsuario,
+        authController.mostrarPanel
+    );
+
+    // Editar Perfil
+    router.get('/editar-perfil', 
+        authController.verificarUsuario,
+        usuariosController.formEditarPerfil
+    );
+    router.post('/editar-perfil', 
+        authController.verificarUsuario,
+        // usuariosController.validarPerfil,
+        usuariosController.subirImagen,
+        usuariosController.editarPerfil
     )
 
-    //panel de administracion
-    router.get('/administracion', 
-        authControllers.autenticarUsuario,
-        authControllers.mostrarPanel);
-
-    //editar perfil
-    router.get('/editar-perfil',
-        authControllers.autenticarUsuario,
-        usuariosControllers.formEditarPerfil
-    );
-    router.post('/editar-perfil',
-        authControllers.autenticarUsuario,
-        //usuariosControllers.validarPerfil,
-        usuariosControllers.subirImagen,
-        usuariosControllers.editarPerfil
+    // Recibir Mensajes de Candidatos
+    router.post('/vacantes/:url', 
+        vacantesController.subirCV,
+        vacantesController.contactar
     );
 
-    //recibir mensaje sde candidatos
-    router.post('/vacentes/:url',
-        vacantesControllers.subirCV,
-        vacantesControllers.contactar
-    );
+    // Muestra los candidatos por vacante
+    router.get('/candidatos/:id', 
+        authController.verificarUsuario,
+        vacantesController.mostrarCandidatos
+    )
 
-    //Mostrar candidaros
-    router.get('/candidatos/:id',
-        authControllers.verificarUsuario,
-        vacantesControllers.mostrarCandidatos
-    );
+    // Buscador de Vacantes
+    router.post('/buscador', vacantesController.buscarVacantes);
+
 
     return router;
 }
