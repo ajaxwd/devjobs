@@ -67,7 +67,8 @@ exports.formEditarPerfil = (req, res) => {
         nombrePagina: 'Editar tu perfil en devjobs',
         usuario: req.user,
         cerrarSesion: true,
-        nombre: req.user.nombre
+        nombre: req.user.nombre,
+        imagen: req.usuario.imagen
     })
 }
 
